@@ -1,0 +1,10 @@
+D:\Csharp projects\CadastralPlanTerritory\CadastralPlanTerritory\bin\Debug\CadastralPlanTerritory.exe.config
+D:\Csharp projects\CadastralPlanTerritory\CadastralPlanTerritory\bin\Debug\CadastralPlanTerritory.exe
+D:\Csharp projects\CadastralPlanTerritory\CadastralPlanTerritory\bin\Debug\CadastralPlanTerritory.pdb
+D:\Csharp projects\CadastralPlanTerritory\CadastralPlanTerritory\obj\Debug\CadastralPlanTerritory.csprojAssemblyReference.cache
+D:\Csharp projects\CadastralPlanTerritory\CadastralPlanTerritory\obj\Debug\CadastralPlanTerritory.Form1.resources
+D:\Csharp projects\CadastralPlanTerritory\CadastralPlanTerritory\obj\Debug\CadastralPlanTerritory.Properties.Resources.resources
+D:\Csharp projects\CadastralPlanTerritory\CadastralPlanTerritory\obj\Debug\CadastralPlanTerritory.csproj.GenerateResource.cache
+D:\Csharp projects\CadastralPlanTerritory\CadastralPlanTerritory\obj\Debug\CadastralPlanTerritory.csproj.CoreCompileInputs.cache
+D:\Csharp projects\CadastralPlanTerritory\CadastralPlanTerritory\obj\Debug\CadastralPlanTerritory.exe
+D:\Csharp projects\CadastralPlanTerritory\CadastralPlanTerritory\obj\Debug\CadastralPlanTerritory.pdb

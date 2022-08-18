@@ -53,9 +53,17 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\Bound.cs" />
     <Compile Include="Models\IEntity.cs" />
+    <Compile Include="Models\ObjectRealty.cs" />
     <Compile Include="Models\Parcel.cs" />
+    <Compile Include="Models\Repositories\BoundRepository.cs" />
+    <Compile Include="Models\Repositories\ObjectRealtyRepository.cs" />
     <Compile Include="Models\Repositories\ParcelRepository.cs" />
+    <Compile Include="Models\Repositories\SpatialDataRepository.cs" />
+    <Compile Include="Models\Repositories\ZoneRepository.cs" />
+    <Compile Include="Models\SpatialData.cs" />
+    <Compile Include="Models\Zone.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XmlHelper.cs" />

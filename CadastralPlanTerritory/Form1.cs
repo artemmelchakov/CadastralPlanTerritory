@@ -3,8 +3,10 @@ using CadastralPlanTerritory.Models.Repositories;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +19,7 @@ namespace CadastralPlanTerritory
     {
         private XmlElement xmlRoot;
 
+        private BaseRepository baseRepository;
         private ParcelRepository parcelRepository;
         private ObjectRealtyRepository objectRealtyRepository;
         private SpatialDataRepository spatialDataRepository;
@@ -35,6 +38,7 @@ namespace CadastralPlanTerritory
 
             xmlRoot = XmlHelper.GetXmlElement();
 
+            baseRepository = new BaseRepository();
             parcelRepository = new ParcelRepository();
             objectRealtyRepository = new ObjectRealtyRepository();
             spatialDataRepository = new SpatialDataRepository();
@@ -54,15 +58,16 @@ namespace CadastralPlanTerritory
             );
             treeView1.CheckBoxes = true;
             treeView1.BeforeSelect += new TreeViewCancelEventHandler(TreeView1_BeforeSelect);
+            treeView1.BeforeCheck += new TreeViewCancelEventHandler(TreeView1_BeforeCheck);
         }
-        public void GetEntityListInTreeView(List<IEntity> entityList, TreeNodeCollection treeNodeCollection)
+        private void GetEntityListInTreeView(List<IEntity> entityList, TreeNodeCollection treeNodeCollection)
         {
             foreach (var entity in entityList)
             {
                 treeNodeCollection.Add(new TreeNode(entity.Id));
             }
         }
-        public void GetEntityPropertiesInTreeView(XmlNodeList xmlNodeList, TreeNodeCollection treeNodeCollection)
+        private void GetEntityPropertiesInTreeView(XmlNodeList xmlNodeList, TreeNodeCollection treeNodeCollection)
         {
             foreach (XmlNode xmlNode in xmlNodeList)
             {
@@ -80,6 +85,18 @@ namespace CadastralPlanTerritory
             }
         }
 
+        private void CheckAllChildNodes(TreeNode treeNode)
+        {
+            foreach (TreeNode node in treeNode.Nodes)
+            {
+                node.Checked = node.Parent.Checked ? false : true;
+            }
+        }
+        private void TreeView1_BeforeCheck(object sender, TreeViewCancelEventArgs e) 
+        {
+            CheckAllChildNodes(e.Node);
+        }
+
         private void TreeView1_BeforeSelect(object sender, TreeViewCancelEventArgs e) 
         {
             if (e.Node.Parent != null)
@@ -89,7 +106,7 @@ namespace CadastralPlanTerritory
                 if (e.Node.Parent == parcelTreeNode)
                 {
                     entity = parcelRepository.FindEntity(e.Node.Text);
-                }
+                }   
                 else if (e.Node.Parent == objectRealtyTreeNode)
                 {
                     entity = objectRealtyRepository.FindEntity(e.Node.Text);
@@ -107,9 +124,9 @@ namespace CadastralPlanTerritory
                     entity = zoneRepository.FindEntity(e.Node.Text);
                 }
 
-                if (entity != null && entity.XmlNodeList != null)
+                if (entity != null && entity.XmlNode != null)
                 {
-                    GetEntityPropertiesInTreeView(entity.XmlNodeList, treeView2.Nodes);
+                    GetEntityPropertiesInTreeView(entity.XmlNode.ChildNodes, treeView2.Nodes);
                 }                
             } 
         }
@@ -130,6 +147,39 @@ namespace CadastralPlanTerritory
             
             zoneRepository.FindZoneEntitiesInXml(xmlRoot.ChildNodes, Zone.List);
             GetEntityListInTreeView(Zone.List, zoneTreeNode.Nodes);
+        }
+        private XmlDocument AddCheckedEntitiesInNewXml()
+        {
+            XmlDocument xmlDocument = new XmlDocument();
+            string xmlstring = "";
+            foreach (TreeNode entityListTreeNode in treeView1.Nodes)
+            {
+                foreach (TreeNode entityTreeNode in entityListTreeNode.Nodes)
+                {
+                    if (entityTreeNode.Checked)
+                    {
+                        xmlstring += baseRepository.FindEntity(entityTreeNode.Text).XmlNode.OuterXml;
+                    }                    
+                }
+            }
+            xmlstring = 
+                "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" + 
+                "<saved_entities>\n" +
+                xmlstring +
+                "</saved_entities>\n";
+            xmlDocument.LoadXml(xmlstring);
+            return xmlDocument;
+        }
+        private void saveSelectedInXmlToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.InitialDirectory = Environment.CurrentDirectory;
+            saveFileDialog.Filter = "xml files (*.xml)|*.xml|All files (*.*)|*.*";
+            saveFileDialog.RestoreDirectory = true;
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                XmlHelper.SaveXmlDocument(AddCheckedEntitiesInNewXml(), saveFileDialog.OpenFile());
+            }
         }
     }
 }

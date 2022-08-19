@@ -43,7 +43,7 @@ namespace CadastralPlanTerritory
 
             treeView1.Nodes.AddRange
             (
-                new TreeNode[] 
+                new TreeNode[]
                 {
                     parcelTreeNode,
                     objectRealtyTreeNode,
@@ -52,31 +52,84 @@ namespace CadastralPlanTerritory
                     zoneTreeNode
                 }
             );
+            treeView1.CheckBoxes = true;
+            treeView1.BeforeSelect += new TreeViewCancelEventHandler(TreeView1_BeforeSelect);
         }
-        public void FormNodesInTreeView (List<IEntity> entityList, TreeNodeCollection treeNodeCollection)
+        public void GetEntityListInTreeView(List<IEntity> entityList, TreeNodeCollection treeNodeCollection)
         {
             foreach (var entity in entityList)
             {
                 treeNodeCollection.Add(new TreeNode(entity.Id));
             }
         }
+        public void GetEntityPropertiesInTreeView(XmlNodeList xmlNodeList, TreeNodeCollection treeNodeCollection)
+        {
+            foreach (XmlNode xmlNode in xmlNodeList)
+            {
+                TreeNode treeNode = new TreeNode();
+                if (xmlNode is XmlText)
+                {
+                    treeNode.Text = xmlNode.InnerText;
+                }   
+                else
+                {
+                    treeNode.Text = xmlNode.Name;
+                }
+                treeNodeCollection.Add(treeNode);
+                GetEntityPropertiesInTreeView(xmlNode.ChildNodes, treeNode.Nodes);
+            }
+        }
+
+        private void TreeView1_BeforeSelect(object sender, TreeViewCancelEventArgs e) 
+        {
+            if (e.Node.Parent != null)
+            {
+                treeView2.Nodes.Clear();
+                IEntity entity = null;
+                if (e.Node.Parent == parcelTreeNode)
+                {
+                    entity = parcelRepository.FindEntity(e.Node.Text);
+                }
+                else if (e.Node.Parent == objectRealtyTreeNode)
+                {
+                    entity = objectRealtyRepository.FindEntity(e.Node.Text);
+                }
+                else if (e.Node.Parent == spatialDataTreeNode)
+                {
+                    entity = spatialDataRepository.FindEntity(e.Node.Text);
+                }
+                else if (e.Node.Parent == boundTreeNode)
+                {
+                    entity = boundRepository.FindEntity(e.Node.Text);
+                }
+                else if (e.Node.Parent == zoneTreeNode)
+                {
+                    entity = zoneRepository.FindEntity(e.Node.Text);
+                }
+
+                if (entity != null && entity.XmlNodeList != null)
+                {
+                    GetEntityPropertiesInTreeView(entity.XmlNodeList, treeView2.Nodes);
+                }                
+            } 
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            parcelRepository.FindInXml(xmlRoot.ChildNodes, Parcel.GlobalParcelList);
-            FormNodesInTreeView(Parcel.GlobalParcelList, parcelTreeNode.Nodes);
+            parcelRepository.FindParcelEntitiesInXml(xmlRoot.ChildNodes, Parcel.List);
+            GetEntityListInTreeView(Parcel.List, parcelTreeNode.Nodes);
             
-            objectRealtyRepository.FindInXml(xmlRoot.ChildNodes, ObjectRealty.GlobalObjectRealtyList);
-            FormNodesInTreeView(ObjectRealty.GlobalObjectRealtyList, objectRealtyTreeNode.Nodes);
+            objectRealtyRepository.FindObjectRealtyEntitiesInXml(xmlRoot.ChildNodes, ObjectRealty.List);
+            GetEntityListInTreeView(ObjectRealty.List, objectRealtyTreeNode.Nodes);
             
-            spatialDataRepository.FindInXml(xmlRoot.ChildNodes, SpatialData.GlobalSpatialDataList);
-            FormNodesInTreeView(SpatialData.GlobalSpatialDataList, spatialDataTreeNode.Nodes);
+            spatialDataRepository.FindSpatialDataEntitiesInXml(xmlRoot.ChildNodes, SpatialData.List);
+            GetEntityListInTreeView(SpatialData.List, spatialDataTreeNode.Nodes);
             
-            boundRepository.FindInXml(xmlRoot.ChildNodes, Bound.GlobalBoundList);
-            FormNodesInTreeView(Bound.GlobalBoundList, boundTreeNode.Nodes);
+            boundRepository.FindBoundEntitiesInXml(xmlRoot.ChildNodes, Bound.List);
+            GetEntityListInTreeView(Bound.List, boundTreeNode.Nodes);
             
-            zoneRepository.FindInXml(xmlRoot.ChildNodes, Zone.GlobalZoneList);
-            FormNodesInTreeView(Zone.GlobalZoneList, zoneTreeNode.Nodes);
+            zoneRepository.FindZoneEntitiesInXml(xmlRoot.ChildNodes, Zone.List);
+            GetEntityListInTreeView(Zone.List, zoneTreeNode.Nodes);
         }
     }
 }

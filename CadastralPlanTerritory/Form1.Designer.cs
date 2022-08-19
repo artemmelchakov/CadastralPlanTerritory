@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.treeView1 = new System.Windows.Forms.TreeView();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.treeView2 = new System.Windows.Forms.TreeView();
             this.SuspendLayout();
             // 
             // treeView1
@@ -39,20 +39,19 @@
             this.treeView1.Size = new System.Drawing.Size(249, 426);
             this.treeView1.TabIndex = 0;
             // 
-            // richTextBox1
+            // treeView2
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(267, 12);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(521, 426);
-            this.richTextBox1.TabIndex = 1;
-            this.richTextBox1.Text = "";
+            this.treeView2.Location = new System.Drawing.Point(267, 12);
+            this.treeView2.Name = "treeView2";
+            this.treeView2.Size = new System.Drawing.Size(531, 426);
+            this.treeView2.TabIndex = 1;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.richTextBox1);
+            this.ClientSize = new System.Drawing.Size(807, 447);
+            this.Controls.Add(this.treeView2);
             this.Controls.Add(this.treeView1);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -64,7 +63,7 @@
         #endregion
 
         private System.Windows.Forms.TreeView treeView1;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.TreeView treeView2;
     }
 }
 

@@ -57,6 +57,7 @@
     <Compile Include="Models\IEntity.cs" />
     <Compile Include="Models\ObjectRealty.cs" />
     <Compile Include="Models\Parcel.cs" />
+    <Compile Include="Models\Repositories\BaseRepository.cs" />
     <Compile Include="Models\Repositories\BoundRepository.cs" />
     <Compile Include="Models\Repositories\ObjectRealtyRepository.cs" />
     <Compile Include="Models\Repositories\ParcelRepository.cs" />

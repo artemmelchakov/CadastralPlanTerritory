@@ -19,7 +19,6 @@ namespace CadastralPlanTerritory
     {
         private XmlElement xmlRoot;
 
-        private BaseRepository baseRepository;
         private ParcelRepository parcelRepository;
         private ObjectRealtyRepository objectRealtyRepository;
         private SpatialDataRepository spatialDataRepository;
@@ -38,7 +37,6 @@ namespace CadastralPlanTerritory
 
             xmlRoot = XmlHelper.GetXmlElement();
 
-            baseRepository = new BaseRepository();
             parcelRepository = new ParcelRepository();
             objectRealtyRepository = new ObjectRealtyRepository();
             spatialDataRepository = new SpatialDataRepository();
@@ -148,27 +146,20 @@ namespace CadastralPlanTerritory
             zoneRepository.FindZoneEntitiesInXml(xmlRoot.ChildNodes, Zone.List);
             GetEntityListInTreeView(Zone.List, zoneTreeNode.Nodes);
         }
-        private XmlDocument AddCheckedEntitiesInNewXml()
+        private List<string> AddCheckedEntitiesIdList()
         {
-            XmlDocument xmlDocument = new XmlDocument();
-            string xmlstring = "";
+            List<string> checkedEntityIdList = new List<string>();
             foreach (TreeNode entityListTreeNode in treeView1.Nodes)
             {
                 foreach (TreeNode entityTreeNode in entityListTreeNode.Nodes)
                 {
                     if (entityTreeNode.Checked)
                     {
-                        xmlstring += baseRepository.FindEntity(entityTreeNode.Text).XmlNode.OuterXml;
+                        checkedEntityIdList.Add(entityTreeNode.Text);
                     }                    
                 }
             }
-            xmlstring = 
-                "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" + 
-                "<saved_entities>\n" +
-                xmlstring +
-                "</saved_entities>\n";
-            xmlDocument.LoadXml(xmlstring);
-            return xmlDocument;
+            return checkedEntityIdList;
         }
         private void saveSelectedInXmlToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -178,7 +169,7 @@ namespace CadastralPlanTerritory
             saveFileDialog.RestoreDirectory = true;
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                XmlHelper.SaveXmlDocument(AddCheckedEntitiesInNewXml(), saveFileDialog.OpenFile());
+                XmlHelper.SaveXmlDocument(AddCheckedEntitiesIdList(), saveFileDialog.OpenFile());
             }
         }
     }

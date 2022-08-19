@@ -169,8 +169,14 @@ namespace CadastralPlanTerritory
             saveFileDialog.RestoreDirectory = true;
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                XmlHelper.SaveXmlDocument(AddCheckedEntitiesIdList(), saveFileDialog.OpenFile());
+                XmlHelper.SaveEntitiesInXmlDocument(AddCheckedEntitiesIdList(), saveFileDialog.OpenFile());
+                toolStripStatusLabel1.Text = "Сохранение завершено. " + DateTime.Now;
             }
+        }
+
+        private void statusStrip1_MouseLeave(object sender, EventArgs e)
+        {
+            toolStripStatusLabel1.Text = "";
         }
     }
 }
